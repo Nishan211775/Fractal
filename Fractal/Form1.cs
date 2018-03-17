@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace Fractal
         private double SY = -1.125; // start value imaginary
         private double EX = 0.6;    // end value real
         private double EY = 1.125;  // end value imaginary
+
+
         private static int x1, y1, xs, ys, xe, ye;
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
         private static float xy;
@@ -26,10 +29,32 @@ namespace Fractal
         private Graphics g1;
         private HSB HSBcol = new HSB();
         private Pen pen;
-
-
-
+        
         private static bool action, rectangle, finished;
+
+        public Fractal()
+        {
+            InitializeComponent();
+
+            SX = Convert.ToDouble(readState()[0]);
+            SY = Convert.ToDouble(readState()[1]);
+            EX = Convert.ToDouble(readState()[2]);
+            EY = Convert.ToDouble(readState()[3]);
+
+
+            finished = false;
+            x1 = pictureBox1.Width;
+            y1 = pictureBox1.Height;
+            xy = (float)x1 / (float)y1;
+            picture = new Bitmap(x1, y1);
+            g1 = Graphics.FromImage(picture);
+            finished = true;
+
+            start();
+            pictureBox1.Cursor = Cursors.Cross;
+            
+        }
+
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -73,7 +98,9 @@ namespace Fractal
 
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            saveState(-2.025, -1.125, 0.6, 1.125);
             Application.Restart();
+            
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
@@ -149,27 +176,8 @@ namespace Fractal
             }
             
         }
-
-        public Fractal()
-        {
-            InitializeComponent();
-            init();
-            start();
-
-            pictureBox1.Cursor = Cursors.Cross;
-        }
-
-
-        public void init()
-        {
-            finished = false;
-            x1 = pictureBox1.Width;
-            y1 = pictureBox1.Height;
-            xy = (float)x1 / (float)y1;
-            picture = new Bitmap(x1, y1);
-            g1 = Graphics.FromImage(picture);
-            finished = true;
-        }
+        
+        
         public void start()
         {
             action = false;
@@ -203,6 +211,7 @@ namespace Fractal
                         Color col = Color.FromArgb((int)HSBcol.rChan, (int)HSBcol.gChan, (int)HSBcol.bChan);
                         pen = new Pen(col);
 
+                        
                         alt = h;
                     }
 
@@ -210,8 +219,6 @@ namespace Fractal
 
                 }
             }
-            //Displaying message after mandlebrot is ready
-            Cursor.Current = Cursors.Cross;
 
             action = true;
         }
@@ -233,6 +240,11 @@ namespace Fractal
 
         private void initvalues() // reset start values
         {
+            //SX = Convert.ToDouble(readState()[0]);
+            //SY = Convert.ToDouble(readState()[1]);
+            //EX = Convert.ToDouble(readState()[2]);
+            //EY = Convert.ToDouble(readState()[3]);
+
             xstart = SX;
             ystart = SY;
             xende = EX;
@@ -252,21 +264,38 @@ namespace Fractal
         }
         public void update()
         {
+
+            Console.WriteLine(xstart+ "" + ystart + "" + xende + "" + yende);
+
+            saveState(xstart, ystart, xende, yende);
+            
             Graphics g = pictureBox1.CreateGraphics();
             g.DrawImage(picture, 0, 0);
             if (rectangle)
             {
 
-                Pen mypen = new Pen(Color.White, 1);
+                Pen p = new Pen(Color.White, 1);
                 if (xs < xe)
                 {
-                    if (ys < ye) g.DrawRectangle(mypen, xs, ys, (xe - xs), (ye - ys));
-                    else g.DrawRectangle(mypen, xs, ye, (xe - xs), (ys - ye));
+                    if (ys < ye)
+                    {
+                        g.DrawRectangle(p, xs, ys, (xe - xs), (ye - ys));
+                    }
+                    else
+                    {
+                        g.DrawRectangle(p, xs, ye, (xe - xs), (ys - ye));
+                    }
                 }
                 else
                 {
-                    if (ys < ye) g.DrawRectangle(mypen, xe, ys, (xs - xe), (ye - ys));
-                    else g.DrawRectangle(mypen, xe, ye, (xs - xe), (ys - ye));
+                    if (ys < ye)
+                    {
+                        g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys));
+                    }
+                    else
+                    {
+                        g.DrawRectangle(p, xe, ye, (xs - xe), (ys - ye));
+                    }
                 }
             }
         }
@@ -276,11 +305,41 @@ namespace Fractal
             Graphics obj = e.Graphics;
             obj.DrawImage(picture, new Point(0, 0));
 
+
         }
 
         private void Fractal_Shown(object sender, EventArgs e)
         {
            
+        }
+
+        private void saveState(double xstart, double ystart, double xend, double yend)
+        {
+            string path = Directory.GetCurrentDirectory() + "\\state.txt";
+            using(StreamWriter sw = File.CreateText(path)) {
+                sw.WriteLine(xstart);
+                sw.WriteLine(ystart);
+                sw.WriteLine(xend);
+                sw.WriteLine(yend);
+            }
+            
+        }
+
+        private List<string> readState()
+        {
+            string path = Directory.GetCurrentDirectory() + "\\state.txt";
+
+            List<string> l = new List<string>();
+
+            using(StreamReader sr = File.OpenText(path)) { 
+                string s = "";
+                while ((s = sr.ReadLine()) != null)
+                {
+                    l.Add(s);
+                }
+            }
+
+            return l;
         }
 
     }

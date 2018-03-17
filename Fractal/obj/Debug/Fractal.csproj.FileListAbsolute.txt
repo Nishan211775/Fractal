@@ -8,3 +8,13 @@ c:\users\nisha\onedrive\documents\visual studio 2017\Projects\Fractal\Fractal\ob
 c:\users\nisha\onedrive\documents\visual studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.csproj.CoreCompileInputs.cache
 c:\users\nisha\onedrive\documents\visual studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.exe
 c:\users\nisha\onedrive\documents\visual studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.pdb
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\bin\Debug\Fractal.exe.config
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\bin\Debug\Fractal.exe
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\bin\Debug\Fractal.pdb
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.Fractal.resources
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.Properties.Resources.resources
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.csproj.GenerateResource.cache
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.csproj.CoreCompileInputs.cache
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.exe
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.pdb
+C:\Users\Nishan Dhungana\Documents\Visual Studio 2017\Projects\Fractal\Fractal\obj\Debug\Fractal.csprojResolveAssemblyReference.cache
