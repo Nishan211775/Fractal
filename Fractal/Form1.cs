@@ -29,7 +29,7 @@ namespace Fractal
         private Graphics g1;
         private HSB HSBcol = new HSB();
         private Pen pen;
-        
+
         private static bool action, rectangle, finished;
 
         public Fractal()
@@ -40,8 +40,7 @@ namespace Fractal
             SY = Convert.ToDouble(readState()[1]);
             EX = Convert.ToDouble(readState()[2]);
             EY = Convert.ToDouble(readState()[3]);
-
-
+            
             finished = false;
             x1 = pictureBox1.Width;
             y1 = pictureBox1.Height;
@@ -58,13 +57,14 @@ namespace Fractal
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
+            //Console.WriteLine("Hello");
             //e.consume();
             if (action)
             {
                 xe = e.X;
                 ye = e.Y;
-                rectangle = true;
-                //update();
+                //rectangle = true;
+                update();
                 //pictureBox1.Refresh();
             }
         }
@@ -99,6 +99,7 @@ namespace Fractal
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveState(-2.025, -1.125, 0.6, 1.125);
+            //new Fractal();
             Application.Restart();
             
         }
@@ -107,6 +108,7 @@ namespace Fractal
         {
             pictureBox1.Image = null;
             pictureBox1.Invalidate();
+            pictureBox1.Dispose();
         }
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
@@ -121,9 +123,27 @@ namespace Fractal
             p.Print();
         }
 
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            new Fractal().Show();
+        }
+
+        private void changeColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Random rd = new Random();
+            int num = rd.Next(1, 8);
+
+            mandelbrot(num);
+            update();
+        }
+
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            update();
             int z, w;
             //this.pictureBox1.Refresh();
             //e.consume();
@@ -159,20 +179,23 @@ namespace Fractal
                 yzoom = (yende - ystart) / (double)y1;
                 mandelbrot();
                 rectangle = false;
-                
-                pictureBox1.Refresh();
+                update();
+                //pictureBox1.Refresh();
             }
+            //update();
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
+
             //update();
             //GC.Collect();
+            action = true;
             if (action)
             {
                 xs = e.X;
                 ys = e.Y;
-                
+                rectangle = true;
             }
             
         }
@@ -189,7 +212,7 @@ namespace Fractal
 
         }
         
-        private void mandelbrot() // calculate all points
+        private void mandelbrot(int num = 0) // calculate all points
         {
             int x, y;
             float h, b, alt = 0.0f;
@@ -207,10 +230,10 @@ namespace Fractal
                         b = 1.0f - h * h; // brightnes
                                           ///djm added
 
-                        HSBcol.fromHSB(h * 255, 0.8f * 255, b * 255); //convert hsb to rgb then make a Java Color
+                        HSBcol.fromHSB(h * 255, 0.8f * 255, b * 255, num); //convert hsb to rgb then make a Java Color
+                                                                      //HSBcol.fromHSB(h * color, 0.8f * 255, b * 255);
                         Color col = Color.FromArgb((int)HSBcol.rChan, (int)HSBcol.gChan, (int)HSBcol.bChan);
                         pen = new Pen(col);
-
                         
                         alt = h;
                     }
@@ -240,11 +263,6 @@ namespace Fractal
 
         private void initvalues() // reset start values
         {
-            //SX = Convert.ToDouble(readState()[0]);
-            //SY = Convert.ToDouble(readState()[1]);
-            //EX = Convert.ToDouble(readState()[2]);
-            //EY = Convert.ToDouble(readState()[3]);
-
             xstart = SX;
             ystart = SY;
             xende = EX;
@@ -256,7 +274,6 @@ namespace Fractal
         {
             if (finished)
             {
-
                 picture = null;
                 g1 = null;
                 // garbage collection
@@ -264,8 +281,6 @@ namespace Fractal
         }
         public void update()
         {
-
-            Console.WriteLine(xstart+ "" + ystart + "" + xende + "" + yende);
 
             saveState(xstart, ystart, xende, yende);
             
