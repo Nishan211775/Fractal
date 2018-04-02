@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Timers;
 
 namespace Fractal
 {
@@ -140,6 +141,33 @@ namespace Fractal
 
             mandelbrot(num);
             update();
+        }
+
+        private void startAnimationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+
+        }
+
+        private int timerInt = 1;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timerInt++;
+            
+            if (timerInt >= 8)
+            {
+                timerInt = 1;
+            } else
+            {
+                mandelbrot(timerInt);
+                update();
+            }
+
+        }
+        
+        private void stopAnimationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +54,7 @@
             this.changeColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startAnimationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopAnimationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -240,12 +242,19 @@
             this.startAnimationToolStripMenuItem.Name = "startAnimationToolStripMenuItem";
             this.startAnimationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.startAnimationToolStripMenuItem.Text = "Start Animation";
+            this.startAnimationToolStripMenuItem.Click += new System.EventHandler(this.startAnimationToolStripMenuItem_Click);
             // 
             // stopAnimationToolStripMenuItem
             // 
             this.stopAnimationToolStripMenuItem.Name = "stopAnimationToolStripMenuItem";
             this.stopAnimationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopAnimationToolStripMenuItem.Text = "Stop Animation";
+            this.stopAnimationToolStripMenuItem.Click += new System.EventHandler(this.stopAnimationToolStripMenuItem_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 700;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Fractal
             // 
@@ -293,6 +302,7 @@
         private System.Windows.Forms.ToolStripMenuItem changeColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startAnimationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopAnimationToolStripMenuItem;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
