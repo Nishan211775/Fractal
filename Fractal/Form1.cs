@@ -22,7 +22,7 @@ namespace Fractal
         private double EX = 0.6;    // end value real
         private double EY = 1.125;  // end value imaginary
 
-
+        private int num = 0;
         private static int x1, y1, xs, ys, xe, ye;
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
         private static float xy;
@@ -58,15 +58,11 @@ namespace Fractal
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            //Console.WriteLine("Hello");
-            //e.consume();
             if (action)
             {
                 xe = e.X;
                 ye = e.Y;
-                //rectangle = true;
                 update();
-                //pictureBox1.Refresh();
             }
         }
 
@@ -100,7 +96,6 @@ namespace Fractal
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveState(-2.025, -1.125, 0.6, 1.125);
-            //new Fractal();
             Application.Restart();
             
         }
@@ -139,6 +134,12 @@ namespace Fractal
             Random rd = new Random();
             int num = rd.Next(1, 8);
 
+            string path = Directory.GetCurrentDirectory() + "\\colorstate.txt";
+            using (StreamWriter sw = File.CreateText(path))
+            {
+               sw.WriteLine(num);
+            }
+
             mandelbrot(num);
             update();
         }
@@ -170,11 +171,32 @@ namespace Fractal
             timer1.Stop();
         }
 
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Fractal \nVersion: 1.0.0 Freeware\nDesigned By: Nishan Dhungana \nemail: nishandhungana41@gmail.com");
+        }
+
+        private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            string message = "Image area:\nWith pressed mouse button you can drag a border " +
+                "on the image to zoom in.\nFile area:\nIn the file you can save the completed " +
+                "fractal images, save and load the current settings.";
+            MessageBox.Show(message);
+        }
+
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             int z, w;
-            //this.pictureBox1.Refresh();
-            //e.consume();
             if (action)
             {
                 xe = e.X;
@@ -208,16 +230,11 @@ namespace Fractal
                 mandelbrot();
                 rectangle = false;
                 update();
-                //pictureBox1.Refresh();
             }
-            //update();
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-
-            //update();
-            //GC.Collect();
             action = true;
             if (action)
             {
@@ -236,7 +253,18 @@ namespace Fractal
             initvalues();
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-            mandelbrot();
+            
+            //reading color state
+            using (StreamReader st = File.OpenText("colorstate.txt"))
+            {
+                int s = 0;
+                while ((s = Convert.ToInt32(st.ReadLine())) != 0)
+                {
+                    num = s;
+                }
+            }
+
+            mandelbrot(num);
 
         }
         
@@ -258,8 +286,7 @@ namespace Fractal
                         b = 1.0f - h * h; // brightnes
                                           ///djm added
 
-                        HSBcol.fromHSB(h * 255, 0.8f * 255, b * 255, num); //convert hsb to rgb then make a Java Color
-                                                                      //HSBcol.fromHSB(h * color, 0.8f * 255, b * 255);
+                        HSBcol.fromHSB(h * 255, 0.8f * 255, b * 255, num); 
                         Color col = Color.FromArgb((int)HSBcol.rChan, (int)HSBcol.gChan, (int)HSBcol.bChan);
                         pen = new Pen(col);
                         
@@ -291,6 +318,7 @@ namespace Fractal
 
         private void initvalues() // reset start values
         {
+            //initializing default value for mendalbrot
             xstart = SX;
             ystart = SY;
             xende = EX;
@@ -304,12 +332,11 @@ namespace Fractal
             {
                 picture = null;
                 g1 = null;
-                // garbage collection
             }
         }
         public void update()
         {
-
+            //save current state of mandelbrot when value updated
             saveState(xstart, ystart, xende, yende);
             
             Graphics g = pictureBox1.CreateGraphics();
@@ -345,6 +372,7 @@ namespace Fractal
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            //creatig image to paintbox
             Graphics obj = e.Graphics;
             obj.DrawImage(picture, new Point(0, 0));
 
@@ -356,8 +384,10 @@ namespace Fractal
            
         }
 
-        private void saveState(double xstart, double ystart, double xend, double yend)
+        //method to save current state of fractal
+        private void saveState(double xstart, double ystart, double xend, double yend, int colorState = 0)
         {
+            //getting root path of the project
             string path = Directory.GetCurrentDirectory() + "\\state.txt";
             using(StreamWriter sw = File.CreateText(path)) {
                 sw.WriteLine(xstart);
@@ -370,6 +400,7 @@ namespace Fractal
 
         private List<string> readState()
         {
+            //getting root path of the project
             string path = Directory.GetCurrentDirectory() + "\\state.txt";
 
             List<string> l = new List<string>();
