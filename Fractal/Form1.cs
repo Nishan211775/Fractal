@@ -96,6 +96,7 @@ namespace Fractal
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveState(-2.025, -1.125, 0.6, 1.125);
+            writeColorState(0);
             Application.Restart();
             
         }
@@ -133,13 +134,7 @@ namespace Fractal
         {
             Random rd = new Random();
             int num = rd.Next(1, 8);
-
-            string path = Directory.GetCurrentDirectory() + "\\colorstate.txt";
-            using (StreamWriter sw = File.CreateText(path))
-            {
-               sw.WriteLine(num);
-            }
-
+            writeColorState(num);
             mandelbrot(num);
             update();
         }
@@ -227,7 +222,7 @@ namespace Fractal
                 }
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
-                mandelbrot();
+                mandelbrot(colorStateReader());
                 rectangle = false;
                 update();
             }
@@ -253,19 +248,7 @@ namespace Fractal
             initvalues();
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-            
-            //reading color state
-            using (StreamReader st = File.OpenText("colorstate.txt"))
-            {
-                int s = 0;
-                while ((s = Convert.ToInt32(st.ReadLine())) != 0)
-                {
-                    num = s;
-                }
-            }
-
-            mandelbrot(num);
-
+            mandelbrot(colorStateReader());
         }
         
         private void mandelbrot(int num = 0) // calculate all points
@@ -414,6 +397,31 @@ namespace Fractal
             }
 
             return l;
+        }
+
+        private int colorStateReader()
+        {
+            int temp = 0;
+
+            using (StreamReader st = File.OpenText("colorstate.txt"))
+            {
+                int s = 0;
+                while ((s = Convert.ToInt32(st.ReadLine())) != 0)
+                {
+                    temp = s;
+                }
+            }
+
+            return temp;
+        }
+
+        private void writeColorState(int num)
+        {
+            string path = Directory.GetCurrentDirectory() + "\\colorstate.txt";
+            using (StreamWriter sw = File.CreateText(path))
+            {
+                sw.WriteLine(num);
+            }
         }
 
     }
